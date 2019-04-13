@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/form.css') }}">
+{% endblock %}
+{% block title %}个人信息{% endblock %}
+{% block page_content %}
+<div class="col-md-11">
+    <div id="form-content">
+        <div class="row">
+            <div class="col-xs-3 col-md-2 col-sm-2">
+                {% if portrait_user %}
+                <img class="img-rounded thumbnail img-responsive " style="margin:auto"
+                     src="data:image/png;base64,{{ base64.b64encode(portrait_user.image).decode() }}">
+                {% endif %}
+            </div>
+            <div class="col-xs-6 col-md-10 col-sm-10 ">
+                <h1>{{user.username}}</h1>
+                {% if user.name or user.location %}
+                <p>
+                    {% if user.name %}{{user.name}}{% endif %}
+                    {% if user.location %}{{user.location}}{% endif %}
+                </p>
+                {% endif %}
+                {% if user.about_me %}<p>{{user.about_me}}</p>{% endif %}
+                <p>
+                    Member since {{moment(user.member_since).format('L')}}.
+                    Last seen {{moment(user.last_seen).fromNow()}}.
+                </p>
+                <p>
+                    {% if user == current_user %}
+                    <a class="btn btn-inverse" href="{{ url_for('.edit_profile') }}">修改个人信息</a>
+                    <a class="btn btn-info" href="{{ url_for('.upload') }}">上传照片</a>
+                    {% endif %}
+                    {% if current_user.is_administrator() %}
+                    <a class="btn btn-danger" href="{{url_for('.admin_edit_userinfo',id=user.id)}}">用户信息管理</a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

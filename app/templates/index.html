@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li> <h1 class="page-title">你好 {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}陌生人{% endif %}!</h1></li>
+</ul>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/form.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='js/geo.js') }}"></script>
+{% endblock %}
+{% block body %}
+{{super()}}
+<body onload="setup();preselect('上海市');promptinfo();"></body>
+{% endblock %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">报修问题分类</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-5">
+    <div id="form-content" class="clearfix">
+        <form name="shareip" action="/Intel_consumption" method="post">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.family_numbers, class="form-control ",placeholder="家庭人数") }}
+            {{ wtf.form_field(form.avg_month_income, class="form-control ",placeholder="个人工资") }}
+            <select class="select" name="province" id="s1">
+                <option></option>
+            </select>
+            <select class="select" name="city" id="s2">
+                <option></option>
+            </select>
+            <select class="select" name="town" id="s3">
+                <option></option>
+            </select>
+            <span class="input-group-btn">
+                  {{ wtf.form_field(form.submit, class="form-control btn btn-info btn-search ") }}
+            </span>
+        </form>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script>
+function promptinfo()
+{
+ var s1 = document.getElementById('s1').value;
+ var s2 = document.getElementById('s2').value;
+ var s3 = document.getElementById('s3').value;
+ var address=""+s1+ s2 + s3;
+ return address;
+}
+
+</script>
+{% endblock %}

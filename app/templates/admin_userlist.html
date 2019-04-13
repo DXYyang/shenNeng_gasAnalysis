@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-box">
+                <!-- Row start -->
+                <div class="am-g">
+                    <div class="am-u-sm-12">
+                        <form method="POST">
+                            <div class="input-group col-md-3" style="margin-top:0px positon:relative">
+                                {{ form.hidden_tag() }}
+                                {{ wtf.form_field(form.search, class="form-control ",placeholder="用户名或真实姓名") }}
+                                <span class="input-group-btn">
+                                      {{ wtf.form_field(form.submit, class="form-control btn btn-info btn-search ") }}
+                                </span>
+                            </div>
+                        </form>
+                        <form class="am-form">
+                            <table class="am-table am-table-striped am-table-hover table-main">
+                                <thead>
+                                <tr>
+                                    <th class="username">用户名
+                                    <th class="email">邮箱</th>
+                                    <th class="table-set">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{user.username}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td>
+                                        <div class="am-btn-toolbar">
+                                            <div class="am-btn-group am-btn-group-xs">
+                                                <a href="{{url_for('main.admin_edit_userinfo',id=user.id)}}">
+                        <span class="am-btn am-btn-default am-btn-xs am-text-secondary">
+                            <span class="am-icon-pencil-square-o"></span>修改</span>
+                                                </a>
+                                                <a href="{{url_for('main.user_info',username=user.username)}}">
+                      <span class="am-btn am-btn-default am-btn-xs am-hide-sm-only">
+                              <span class="am-icon-copy"></span>查看</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}

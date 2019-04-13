@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/form.css') }}">
+{% endblock %}
+{% block title %}修改个人信息{% endblock %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">修改个人信息</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-4">
+    <div id="form-content">
+<form method="post">
+		     {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.name) }}
+             {{ wtf.form_field(form.location) }}
+            {{ wtf.form_field(form.about_me)}}
+            {{ wtf.form_field(form.submit,class="btn btn-primary btn-large") }}
+	</form>
+    </div>
+
+</div>
+</div>
+
+{% endblock %}

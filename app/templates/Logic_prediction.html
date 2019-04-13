@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+{% block page_content %}
+<div class="page-content">
+    {% if not coef.empty %}
+    <div class="row">
+        <div class="col-md-10">
+            <div class="row">
+                {% for index,row in coef.iterrows() %}
+                <div class="col-md-3">
+                    <div class="stat-container">
+                        <div class="stat-holder">
+                            <div class="stat1">
+                                <span>{{row['columns']}}与销售的相关系数</span>
+                                <span>{{row['coef']}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-10">
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                    <h3>销售好坏预测结果</h3>
+                </div>
+                <div class="widget-content">
+                    <table class="result table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>销售额</th>
+                            <th>销售好坏（1为好）</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in result_from_db %}
+                        <tr>
+                            <td>{{row['gas_sales']}}</td>
+                            <td>{{row['sales_well']}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+
+                    </table>
+                    {% if pagination %}
+                    <div class="pagination">
+                        {{ macros.pagination_widget(pagination, '.Logic_prediction' )}}
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

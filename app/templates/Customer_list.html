@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">客户数据</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-1">  </div>
+        <div class="col-md-10">
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                    <h3>客户数据</h3>
+                </div>
+                <div class="widget-content">
+                    <table class="result table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>客户号</th>
+                            <th>年用气量</th>
+                            <th>高峰用气比率</th>
+                            <th>实际用气能力</th>
+                            <th>可替代品数量</th>
+                            <th>燃气使用增长率</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in result_from_db %}
+                        <tr>
+                            <td>{{row['id']}}</td>
+                            <td>{{row['year_avg_use']}}</td>
+                            <td>{{row['high_usage_rate']}}</td>
+                            <td>{{row['capacity']}}</td>
+                            <td>{{row['replace_thing']}}</td>
+                            <td>{{row['grow_rate']}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if pagination %}
+                    <div class="pagination">
+                        {{ macros.pagination_widget(pagination, '.Customer_list' )}}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

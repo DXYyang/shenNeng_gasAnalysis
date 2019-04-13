@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/analysis.css') }}">
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='highcharts.js') }}"></script>
+<script type="text/javascript">
+{% if percentage %}
+ var chart;
+        $(document).ready(function () {
+         chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'sentiment',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: '情感分析饼状图'
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.point.name + '</b>: ' + this.percentage.toFixed(2) + ' %';
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function () {
+                            return '<b>' + this.point.name + '</b>: ' + this.percentage.toFixed(2) + ' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'pie',
+                data: [
+                ['积极', {{percentage[0]}}],
+                ['消极', {{percentage[1]}}],
+            ]
+            }]
+        });
+         });
+         {% endif %}
+
+</script>
+{% endblock %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">用户情感分析</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="am-g">
+    <div class="am-u-md-12">
+        <div class="card-box">
+            <form method="POST" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                {{ wtf.form_field(form.Review)}}
+                <span class="am-input-group-btn">
+        <button class="am-btn am-btn-primary" type="submit">提交</button>
+      </span>
+            </form>
+        </div>
+    </div>
+</div>
+{% if result %}
+<div class="am-g">
+    <div class="am-u-md-12">
+        <div class="stat-container">
+            {% for i in k %}
+            <div class="stat-holder">
+                <div class="stat">
+                    <span>{{result[i]}}</span>
+                    {{review_title[i]}}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="am-g">
+    <div class="am-u-md-12">
+        <div id="sentiment"></div>
+    </div>
+</div>
+
+{% endblock %}

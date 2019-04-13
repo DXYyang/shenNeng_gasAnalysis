@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script>
+$("#Logic_pic_png").attr('src',src="../static/Logic_pic.png"+"?t="+Math.random());
+</script>
+{% endblock %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">销售好坏预测</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="am-g">
+    <div class="am-u-md-6">
+        <div class="card-box">
+            <div class="am-g" style="height:36px">
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <form method="POST" action="/Logic_property" enctype="multipart/form-data">
+                    <button type="submit" class="am-btn am-btn-primary ">
+                        <span class="am-icon-book"></span>销售属性分析
+                    </button>
+                </form>
+            </div>
+            <div class="am-g" style="height:35px">
+            </div>
+        </div>
+    </div>
+    <div class="am-u-md-6">
+        <div class="card-box">
+            <div class="row">
+                    <div class="col-md-4"></div>
+                <div class="col-md-8">
+                      <form method="POST" action="/Logic_prediction" enctype="multipart/form-data">
+                {{ predict_form.hidden_tag() }}
+                {{ wtf.form_field(predict_form.file, accept=".xls,.csv") }}
+                <button type="submit" class="am-btn am-btn-primary ">
+                    <span class="am-icon-star"></span>销售好坏分析
+                </button>
+            </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="am-g">
+    <div class="am-u-md-12">
+        {% if Logic_pic %}
+        <div class="card-box">
+            <img class="img-rounded thumbnail img-responsive " id="Logic_pic_png" style="margin:auto"
+                 src="{{url_for('static',filename=Logic_pic)}}">
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

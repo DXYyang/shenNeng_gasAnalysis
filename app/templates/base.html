@@ -1,0 +1,115 @@
+{% extends "bootstrap/base.html" %}
+{% block head %}
+{{ super() }}
+<link rel="shortcut icon" href="{{ url_for('static', filename='images/logo.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='images/logo.ico') }}" type="image/x-icon">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/amazeui.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/core.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page/typography.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/page/form.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/component.css') }}"/>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+{% endblock %}
+{% block scripts %}
+{{super()}}
+{{ moment.include_moment() }}
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.1.0.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/amazeui.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/blockUI.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/charts/echarts.min.js') }}"></script>
+{{moment.include_moment()}}
+{% endblock %}
+{% block title %}燃气大数据{% endblock %}
+{% block navbar %}
+<header class="am-topbar am-topbar-fixed-top">
+    <div class="am-topbar-left am-hide-sm-only">
+        <a href="/" class="logo"><span>燃气大数据系统</span><i class="zmdi zmdi-layers"></i></a>
+    </div>
+    <div class="contain">
+        <div class="col-md-4">
+        </div>
+         <div class="col-md-8">
+             {% block page_title %}{% endblock %}
+        <ul class="am-nav am-navbar-nav am-navbar-right">
+            {% if current_user.is_authenticated %}
+            <li><a href="{{url_for('auth.logout')}}"><i class="glyphicon glyphicon-off"></i>登出</a></li>
+            {% else %}
+            <li><a href="{{url_for('auth.login')}}"><i class="glyphicon glyphicon-star-empty"></i>登录</a></li>
+            {% endif %}
+        </ul>
+        </div>
+
+    </div>
+</header>
+<div class="admin">
+    <div class="admin-sidebar am-offcanvas  am-padding-0" id="admin-offcanvas">
+        <div class="am-offcanvas-bar admin-offcanvas-bar">
+            <!-- User -->
+            <div class="user-box am-hide-sm-only">
+                <div class="user-img">
+                    {% if portrait %}
+                    <img class="img-circle img-thumbnail img-responsive" alt="user-img" style="margin:auto"
+                         src="data:image/png;base64,{{ base64.b64encode(portrait.image).decode() }}">
+                    {% endif %}
+                </div>
+                {% if current_user.is_authenticated %}
+                <h5> {{ current_user.username }} </h5>
+                {% else %}
+                <h5> 陌生人 </h5>
+                {% endif %}
+            </div>
+            <!-- End User -->
+            <ul class="am-list admin-sidebar-list">
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('main.user_info', username=current_user.username) }}"><span
+                        class="am-icon-cc-visa"></span> 个人档案</a></li>
+                {% endif %}
+                {% if current_user.can(Permission.Administrator) %}
+                <li><a href="{{url_for('main.admin_userlist')}}"><span class="am-icon-copyright"></span> 用户信息</a></li>
+                {% endif %}
+                {% if current_user.can(Permission.GasData_Management) %}
+                <li><a href="{{url_for('main.Customer_list')}}"><span class="am-icon-database"></span> 客户数据</a></li>
+                {% endif %}
+                {% if current_user.can(Permission.GasData_Analysis) %}
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav1'}"><span class="am-icon-table"></span>数据分析<span
+                            class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub " id="collapse-nav1">
+                        <li><a href="{{url_for('main.Logic_regression')}}">销售好坏预测</a></li>
+                        <li><a href="{{url_for('main.K_means')}}">客户聚类</a></li>
+                        <li><a href="{{url_for('main.Review_senti')}}">用户评论情感分析</a></li>
+                        <li><a href="{{url_for('main.Gasproblem_distribute')}}">燃气报修问题分类</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                {% if current_user.can(Permission.AI_Recommend) %}
+                <li class="admin-parent">
+                    <a class="am-cf" data-am-collapse="{target: '#collapse-nav2'}"><i class="am-icon-line-chart"
+                                                                                      aria-hidden="true"></i> 智能推荐<span
+                            class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                    <ul class="am-list am-collapse admin-sidebar-sub " id="collapse-nav2">
+                        <li><a href="{{url_for('main.Intel_consumption')}}">使用量预测（特征值）</a></li>
+                        <li><a href="{{url_for('main.history_based_recommend')}}">使用量预测（历史值）</a></li>
+                        <li><a href="{{url_for('main.gas_fix')}}">燃气维修地点查询</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="content-page">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-info">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{message}}
+        </div>
+        {% endfor %}
+        {% block page_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

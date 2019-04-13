@@ -1,0 +1,23 @@
+{% extends "login_base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}燃气用户登录{% endblock %}
+{% block body %}
+    <div class="login">
+        <div class="register">
+            <p>新用户?
+        <a href="{{url_for('auth.register')}}">
+            立即注册
+        </a>
+    </p></div>
+    <div class="message">燃气大数据用户登录</div>
+    <div id="darkbannerwrap"></div>
+    <form method="post">
+		   {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.email, class="form-control",placeholder="请输入邮箱") }}
+            {{ wtf.form_field(form.password ,class="form-control",placeholder="请输入密码") }}
+            {{ wtf.form_field(form.remember_me) }}
+            {{ wtf.form_field(form.submit,class="btn btn-primary btn-large") }}
+	</form>
+</div>
+
+{% endblock %}

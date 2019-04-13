@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=h31gPawGznx5GxO3BRzQBld7eFktCfrw"></script>
+<script type="text/javascript"
+        src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css"/>
+<script type="text/javascript">
+function initialize() {
+ var map = new BMap.Map("container1");
+    map.centerAndZoom("上海", 12);
+    map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+    map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+    map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+    map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+    map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+    var localSearch = new BMap.LocalSearch(map);
+    localSearch.enableAutoViewport(); //允许自动调节窗体大小
+$('#map').on('click', function() {
+map.clearOverlays();//清空原来的标注
+    var keyword = document.getElementById("text_").value;
+    localSearch.setSearchCompleteCallback(function (searchResult) {
+        var poi = searchResult.getPoi(0);
+        document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat;
+        map.centerAndZoom(poi.point, 12);
+        var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+        map.addOverlay(marker);
+        var options = {
+		renderOptions: {
+			map: map
+		},
+		onSearchComplete: function(results) {
+		}
+	};
+	var localSearch = new BMap.LocalSearch(map, options);
+			var circle = new BMap.Circle(poi.point, 4250, {
+			fillColor: "blue",
+			strokeWeight: 1,
+			fillOpacity: 0.3,
+			strokeOpacity: 0.3
+		});
+		map.addOverlay(circle);
+		localSearch.searchNearby('燃气维修', poi.point, 4250);
+        var drawingManager = new BMapLib.DrawingManager(map, {
+		isOpen: false, //是否开启绘制模式
+		enableDrawingTool: true, //是否显示工具栏
+		drawingToolOptions: {
+			anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+			offset: new BMap.Size(5, 5), //偏离值
+			scale: 0.8, //工具栏缩放比例
+			drawingModes: [
+				BMAP_DRAWING_CIRCLE
+			]
+		}
+	});
+	var circle = null;
+	drawingManager.addEventListener('circlecomplete', function(e, overlay) {
+	//	circlecomplete
+	    map.clearOverlays();
+		circle = e;
+		map.addOverlay(overlay);
+		var radius = parseInt(e.getRadius());
+		var center = e.getCenter();
+		drawingManager.close();
+		localSearch.searchNearby('燃气维修', center, radius);
+	});
+        var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+        var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+        marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+        // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    });
+    localSearch.search(keyword);
+});
+}
+function loadScript() {
+  var script = document.createElement("script");
+  script.src = "http://api.map.baidu.com/api?v=2.0&ak=h31gPawGznx5GxO3BRzQBld7eFktCfrw&callback=initialize";//此为v2.0版本的引用方式
+  // http://api.map.baidu.com/api?v=1.4&ak=您的密钥&callback=initialize"; //此为v1.4版本及以前版本的引用方式
+  document.body.appendChild(script);
+}
+window.onload = loadScript;
+
+</script>
+{% endblock %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">燃气维修地点查询</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="am-g">
+    <div class="am-u-md-12">
+        <div class="card-box">
+                    <div class="row">
+                        <div class="col-md-6">
+                           查询地址:<input id="text_" type="text" value="华东理工大学" />
+                    <input class="am-btn am-btn-primary" type="button" value="查询" id="map"/>
+                        </div>
+                      <div class="col-md-6">
+                          查询结果(经纬度)：<input id="result_" type="text"/>
+                      </div>
+                    </div>
+                <div id="container1"
+                     style="position: absolute;
+                margin-top:30px;
+                width: 750px;
+                height: 450px;
+                top: 50px;
+                border: 1px solid gray;
+                overflow:hidden;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

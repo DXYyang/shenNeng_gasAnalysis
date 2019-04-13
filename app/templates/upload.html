@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_title %}
+<ul class="am-nav am-navbar-nav am-navbar-left">
+    <li><h4 class="page-title">上传照片</h4></li>
+</ul>
+{% endblock %}
+{% block page_content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-6">
+            <div class="card-box">
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                {{ wtf.form_field(form.name) }}
+                {{ wtf.form_field(form.file) }}
+                {{ wtf.form_field(form.submit, class="form-control btn btn-info") }}
+            </form>
+                </div>
+        </div>
+    </div>
+<h1>相册库</h1>
+    <div class="row">
+        {% if ds %}
+        {% for d in ds%}
+        <div class="col-md-3">
+            <div class="card-box">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2"></div>
+                          <img src="data:image/png;base64,{{ base64.b64encode(d.image).decode() }}"/>
+                        <div class="row">
+                            <div class="col-md-3"></div>
+                             <a href="{{url_for('main.delPic',id=d.id)}}">删除</a>
+            <a href="{{url_for('main.changePic',id=d.id,username=current_user.username)}}">设置为头像</a>
+                        </div>
+                    </div>
+                </div>
+
+
+        </div>
+
+            </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

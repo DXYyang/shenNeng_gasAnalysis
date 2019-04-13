@@ -1,0 +1,25 @@
+db.session.execute(
+Customer.__table__.insert(),
+[{'year_avg_use':randint(200,500),'high_usage_rate':Decimal(randrange(1000))/1000,'capacity':Decimal(randrange(1000))/1000,'replace_thing':randint(10,50),'grow_rate':Decimal(randrange(1000))/1000}for i in range(500)]);
+db.session.commit()
+db.session.execute(
+Gasconsumption.__table__.insert(),
+[{'gas_sales':Decimal(randrange(1000,10000))/10,'district_GDP':Decimal(randrange(10000,100000))/10,'population':randint(500,1000),'month_avg_income':Decimal(randrange(10000,1000000))/10,'gas_price':Decimal(randrange(100,1000))/100,'liquid_price':Decimal(randrange(100,1000))/100}for i in range(100)]);
+db.session.commit()
+db.session.execute(
+db.session.execute(
+Gasconsumption.__table__.insert(),
+[{'gas_sales':Decimal(randrange(17500,30000))/10,'district_GDP':Decimal(randrange(20000,40000))/10,'population':randint(600,1000),'month_avg_income':Decimal(randrange(90000,150000))/10,'gas_price':Decimal(randrange(150,300))/100,'liquid_price':Decimal(randrange(100,150))/100,'sales_well':1}for i in range(100)]);
+db.session.commit()
+db.session.execute(
+Gasconsumption.__table__.insert(),
+[{'gas_sales':Decimal(randrange(5000,17500))/10,'district_GDP':Decimal(randrange(10000,25000))/10,'population':randint(500,750),'month_avg_income':Decimal(randrange(55000,100000))/10,'gas_price':Decimal(randrange(100,200))/100,'liquid_price':Decimal(randrange(135,200))/100,'sales_well':0}for i in range(100)]);
+db.session.commit()
+db.session.execute(
+GasconsumptionTest.__table__.insert(),
+[{'gas_sales':Decimal(randrange(17500,30000))/10,'district_GDP':Decimal(randrange(20000,40000))/10,'population':randint(600,1000),'month_avg_income':Decimal(randrange(90000,150000))/10,'gas_price':Decimal(randrange(150,300))/100,'liquid_price':Decimal(randrange(100,150))/100}for i in range(100)]);
+db.session.commit()
+db.session.execute(
+GasconsumptionTest.__table__.insert(),
+[{'gas_sales':Decimal(randrange(5000,17500))/10,'district_GDP':Decimal(randrange(10000,25000))/10,'population':randint(500,750),'month_avg_income':Decimal(randrange(55000,100000))/10,'gas_price':Decimal(randrange(100,200))/100,'liquid_price':Decimal(randrange(135,200))/100}for i in range(100)]);
+db.session.commit()
